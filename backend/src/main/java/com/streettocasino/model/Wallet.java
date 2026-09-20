@@ -18,21 +18,12 @@ public class Wallet {
     }
 
     /**
-     * Spends the specified amount of money if the wallet has enough funds.
+     * Returns the current amount of money in the wallet.
      *
-     * @param amount the amount of money to spend
-     * @throws IllegalArgumentException if the amount is null or negative
+     * @return the current money balance
      */
-    public void spendMoney(BigDecimal amount) {
-        if (amount == null){
-            throw new IllegalArgumentException("amount is null");
-        }
-        if (amount.compareTo(BigDecimal.ZERO) < 0) {
-            throw new IllegalArgumentException("amount is negative");
-        }
-        if (this.money.compareTo(amount) >= 0) {
-            this.money = this.money.subtract(amount);
-        }
+    public BigDecimal getMoney() {
+        return money;
     }
 
     /**
@@ -42,47 +33,21 @@ public class Wallet {
      * @throws IllegalArgumentException if the amount is null or negative
      */
     public void addMoney(BigDecimal amount) {
-        if (amount == null){
-            throw new IllegalArgumentException("amount is null");
-        }
-        if (amount.compareTo(BigDecimal.ZERO) < 0) {
-            throw new IllegalArgumentException("amount is negative");
-        }
+        validateAmount(amount);
         this.money = this.money.add(amount);
     }
 
     /**
-     * Spends the specified amount of rare coins if the wallet has enough funds.
+     * Spends the specified amount of money if the wallet has enough funds.
      *
-     * @param amount the amount of rare coins to spend
+     * @param amount the amount of money to spend
      * @throws IllegalArgumentException if the amount is null or negative
      */
-    public void spendRareCoins(BigDecimal amount) {
-        if (amount == null){
-            throw new IllegalArgumentException("amount is null");
+    public void spendMoney(BigDecimal amount) {
+        validateAmount(amount);
+        if (this.money.compareTo(amount) >= 0) {
+            this.money = this.money.subtract(amount);
         }
-        if (amount.compareTo(BigDecimal.ZERO) < 0) {
-            throw new IllegalArgumentException("amount is negative");
-        }
-        if (this.rareCoins.compareTo(amount) >= 0) {
-            this.rareCoins = this.rareCoins.subtract(amount);
-        }
-    }
-
-    /**
-     * Adds the specified amount of rare coins to the wallet.
-     *
-     * @param amount the amount of rare coins to add
-     * @throws IllegalArgumentException if the amount is null or negative
-     */
-    public void addRareCoins(BigDecimal amount) {
-        if (amount == null){
-            throw new IllegalArgumentException("amount is null");
-        }
-        if (amount.compareTo(BigDecimal.ZERO) < 0) {
-            throw new IllegalArgumentException("amount is negative");
-        }
-        this.rareCoins = this.rareCoins.add(amount);
     }
 
     /**
@@ -95,11 +60,40 @@ public class Wallet {
     }
 
     /**
-     * Returns the current amount of money in the wallet.
+     * Adds the specified amount of rare coins to the wallet.
      *
-     * @return the current money balance
+     * @param amount the amount of rare coins to add
+     * @throws IllegalArgumentException if the amount is null or negative
      */
-    public BigDecimal getMoney() {
-        return money;
+    public void addRareCoins(BigDecimal amount) {
+        validateAmount(amount);
+        this.rareCoins = this.rareCoins.add(amount);
+    }
+
+    /**
+     * Spends the specified amount of rare coins if the wallet has enough funds.
+     *
+     * @param amount the amount of rare coins to spend
+     * @throws IllegalArgumentException if the amount is null or negative
+     */
+    public void spendRareCoins(BigDecimal amount) {
+        validateAmount(amount);
+        if (this.rareCoins.compareTo(amount) >= 0) {
+            this.rareCoins = this.rareCoins.subtract(amount);
+        }
+    }
+
+    public boolean canAfford(BigDecimal amount){
+        validateAmount(amount);
+        return this.money.compareTo(amount) >= 0;
+    }
+
+    private void validateAmount(BigDecimal amount) {
+        if (amount == null) {
+            throw new IllegalArgumentException("amount is null");
+        }
+        if (amount.compareTo(BigDecimal.ZERO) < 0) {
+            throw new IllegalArgumentException("amount is negative");
+        }
     }
 }
