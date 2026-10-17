@@ -48,14 +48,14 @@ public class Gameplay {
     }
 
     /**
-     * Performs one cleaning action using the player's currently equipped brush.
+     * Performs one cleaning action using the player's current brush.
+     * Grants the shoe reward when cleaning is completed for the first time.
      *
-     * <p>If the cleaning is completed by this action, the shoe's money reward
-     * is granted to the player. A shoe can only grant its reward once.</p>
-     *
+     * @return true if the shoe was completed by this action,
+     *         false otherwise
      * @throws IllegalStateException if no cleaning task has been started
      */
-    public void clean() {
+    public boolean clean() {
         if (currentShoe == null) {
             throw new IllegalStateException("No cleaning task has been started");
         }
@@ -64,6 +64,8 @@ public class Gameplay {
         if (currentCleaning.isCompleted() && !rewardGranted) {
             player.addMoney(currentShoe.getMoneyReward());
             rewardGranted = true;
+            return true;
         }
+        return false;
     }
 }
