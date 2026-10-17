@@ -1,5 +1,7 @@
 package com.streettocasino.model;
 
+import java.util.Objects;
+
 /**
  * Represents a brush used by the player to clean shoes.
  *
@@ -40,5 +42,18 @@ public class Brush {
      */
     public int getBrushEfficiency() {
         return brushEfficiency;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) return true;
+        Brush brush = (Brush) o;
+        return brushEfficiency == brush.brushEfficiency && Objects.equals(brushName, brush.brushName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(brushName, brushEfficiency);
     }
 }
