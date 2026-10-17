@@ -27,6 +27,15 @@ public class BrushCatalog {
         return offers;
     }
 
+    /**
+     * Returns the next available brush upgrade for the given brush.
+     *
+     * <p>Upgrades follow the order defined in the catalog.</p>
+     *
+     * @param currentBrush the currently equipped brush
+     * @return the next brush offer, or null if the current brush is the last upgrade
+     * @throws IllegalArgumentException if the current brush is not in the catalog
+     */
     public BrushOffer getNextUpgrade(Brush currentBrush) {
         for (int i = 0; i < offers.size(); i++) {
             if (offers.get(i).brush().equals(currentBrush)) {
