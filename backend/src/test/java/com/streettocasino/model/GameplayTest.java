@@ -120,4 +120,32 @@ public class GameplayTest {
         gameplay.clean();
         assertEquals(BigDecimal.valueOf(50), player.getMoney());
     }
+
+    @Test
+    void shouldReturnFalseWhenCleaningIsNotCompleted() {
+        Player player = new Player();
+        Shoe shoeA = new Shoe(10, BigDecimal.valueOf(30));
+        Gameplay gameplay = new Gameplay(player);
+        gameplay.startNewShoe(shoeA);
+        assertFalse(gameplay.clean());
+    }
+
+    @Test
+    void shouldReturnTrueWhenShoeIsCompleted() {
+        Player player = new Player();
+        Shoe shoeA = new Shoe(1, BigDecimal.valueOf(30));
+        Gameplay gameplay = new Gameplay(player);
+        gameplay.startNewShoe(shoeA);
+        assertTrue(gameplay.clean());
+    }
+
+    @Test
+    void shouldReturnFalseWhenShoeWasAlreadyCompleted() {
+        Player player = new Player();
+        Shoe shoeA = new Shoe(1, BigDecimal.valueOf(30));
+        Gameplay gameplay = new Gameplay(player);
+        gameplay.startNewShoe(shoeA);
+        gameplay.clean();
+        assertFalse(gameplay.clean());
+    }
 }
