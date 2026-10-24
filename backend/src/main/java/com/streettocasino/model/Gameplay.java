@@ -33,7 +33,7 @@ public class Gameplay {
      *
      * @param shoe the shoe to start cleaning
      * @throws IllegalArgumentException if the shoe is null
-     * @throws IllegalStateException if the current shoe is not fully cleaned
+     * @throws IllegalStateException    if the current shoe is not fully cleaned
      */
     public void startNewShoe(Shoe shoe) {
         if (shoe == null) {
@@ -52,7 +52,7 @@ public class Gameplay {
      * Grants the shoe reward when cleaning is completed for the first time.
      *
      * @return true if the shoe was completed by this action,
-     *         false otherwise
+     * false otherwise
      * @throws IllegalStateException if no cleaning task has been started
      */
     public boolean clean() {
@@ -67,5 +67,23 @@ public class Gameplay {
             return true;
         }
         return false;
+    }
+
+    /**
+     * Returns the shoe currently being cleaned.
+     *
+     * @return the current shoe
+     */
+    public Shoe getCurrentShoe() {
+        return currentShoe;
+    }
+
+    /**
+     * Returns the current cleaning progress.
+     *
+     * @return the progress of the current shoe
+     */
+    public int getProgress() {
+        return currentCleaning.getProgress();
     }
 }

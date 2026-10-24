@@ -42,4 +42,22 @@ public class GameSession {
             gameplay.startNewShoe(shoeGenerator.generateShoe());
         }
     }
+
+    /**
+     * Returns the current cleaning progress.
+     *
+     * @return the progress of the current shoe
+     */
+    public int getProgress() {
+        return gameplay.getProgress();
+    }
+
+    /**
+     * Returns the shoe currently being cleaned.
+     *
+     * @return the current shoe
+     */
+    public Shoe getCurrentShoe() {
+        return gameplay.getCurrentShoe();
+    }
 }
