@@ -1,10 +1,12 @@
 package com.streettocasino.controller;
 
 import com.streettocasino.dto.GameState;
+import com.streettocasino.mapper.GameStateMapper;
 import com.streettocasino.service.GameService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -19,6 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(GameController.class)
+@Import(GameStateMapper.class)
 class GameControllerTest {
 
     @Autowired
@@ -57,17 +60,17 @@ class GameControllerTest {
 
         mockMvc.perform(get("/api/games/{sessionId}", sessionId))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.money").value(0))
-                .andExpect(jsonPath("$.rareCoins").value(0))
-                .andExpect(jsonPath("$.reputation").value(0))
-                .andExpect(jsonPath("$.brushName").value("Basic Brush"))
-                .andExpect(jsonPath("$.brushEfficiency").value(1))
-                .andExpect(jsonPath("$.shoeDirtLevel").value(10))
-                .andExpect(jsonPath("$.cleaningProgress").value(0))
-                .andExpect(jsonPath("$.shoeReward").value(15))
-                .andExpect(jsonPath("$.nextBrushName").value("Better Brush"))
-                .andExpect(jsonPath("$.nextBrushEfficiency").value(2))
-                .andExpect(jsonPath("$.nextBrushPrice").value(50));
+                .andExpect(jsonPath("$.player.money").value(0))
+                .andExpect(jsonPath("$.player.rareCoins").value(0))
+                .andExpect(jsonPath("$.player.reputation").value(0))
+                .andExpect(jsonPath("$.player.equippedBrush.brushName").value("Basic Brush"))
+                .andExpect(jsonPath("$.player.equippedBrush.brushEfficiency").value(1))
+                .andExpect(jsonPath("$.shoe.shoeDirtLevel").value(10))
+                .andExpect(jsonPath("$.shoe.cleaningProgress").value(0))
+                .andExpect(jsonPath("$.shoe.shoeReward").value(15))
+                .andExpect(jsonPath("$.nextUpgrade.brushName").value("Better Brush"))
+                .andExpect(jsonPath("$.nextUpgrade.brushEfficiency").value(2))
+                .andExpect(jsonPath("$.nextUpgrade.price").value(50));
     }
 
     @Test
@@ -90,7 +93,7 @@ class GameControllerTest {
 
         mockMvc.perform(post("/api/games/{sessionId}/clean", sessionId))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.cleaningProgress").value(1));
+                .andExpect(jsonPath("$.shoe.cleaningProgress").value(1));
         verify(gameService).clean(sessionId);
     }
 
@@ -115,9 +118,9 @@ class GameControllerTest {
 
         mockMvc.perform(post("/api/games/{sessionId}/brush/upgrade", sessionId))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.brushName").value("Better Brush"))
-                .andExpect(jsonPath("$.brushEfficiency").value(2))
-                .andExpect(jsonPath("$.nextBrushName").value("Professional Brush"));
+                .andExpect(jsonPath("$.player.equippedBrush.brushName").value("Better Brush"))
+                .andExpect(jsonPath("$.player.equippedBrush.brushEfficiency").value(2))
+                .andExpect(jsonPath("$.nextUpgrade.brushName").value("Professional Brush"));
 
         verify(gameService).buyBrushUpgrade(sessionId);
     }
@@ -143,9 +146,8 @@ class GameControllerTest {
 
         mockMvc.perform(post("/api/games/{sessionId}/brush/upgrade", sessionId))
                 .andExpect(status().isConflict())
-                .andExpect(jsonPath("$.money").value(0))
-                .andExpect(jsonPath("$.brushName").value("Basic Brush"));
-        ;
+                .andExpect(jsonPath("$.player.money").value(0))
+                .andExpect(jsonPath("$.player.equippedBrush.brushName").value("Basic Brush"));
         verify(gameService).buyBrushUpgrade(sessionId);
     }
 }

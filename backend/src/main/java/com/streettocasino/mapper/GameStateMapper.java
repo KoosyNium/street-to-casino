@@ -1,7 +1,9 @@
 package com.streettocasino.mapper;
 
 import com.streettocasino.dto.*;
+import org.springframework.stereotype.Component;
 
+@Component
 public class GameStateMapper {
     public GameStateResponse toResponse(GameState gameState) {
         BrushResponse equippedBrush = new BrushResponse(

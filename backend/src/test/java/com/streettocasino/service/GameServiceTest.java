@@ -1,6 +1,7 @@
 package com.streettocasino.service;
 
 import com.streettocasino.dto.GameState;
+import com.streettocasino.exception.GameSessionNotFoundException;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
@@ -82,12 +83,12 @@ class GameServiceTest {
         GameService gameService = new GameService();
         UUID sessionId = UUID.randomUUID();
 
-        IllegalArgumentException exception = assertThrows(
-                IllegalArgumentException.class,
+        GameSessionNotFoundException exception = assertThrows(
+                GameSessionNotFoundException.class,
                 () -> gameService.clean(sessionId)
         );
 
-        assertEquals("Session ID is not found", exception.getMessage());
+        assertEquals("Game session not found", exception.getMessage());
     }
 
     @Test

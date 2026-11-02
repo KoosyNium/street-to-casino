@@ -1,6 +1,8 @@
 package com.streettocasino.controller;
 
 import com.streettocasino.dto.GameState;
+import com.streettocasino.dto.GameStateResponse;
+import com.streettocasino.mapper.GameStateMapper;
 import com.streettocasino.service.GameService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,14 +22,17 @@ import java.util.UUID;
 public class GameController {
 
     private final GameService gameService;
+    private  final GameStateMapper gameStateMapper;
 
     /**
-     * Creates a controller with the required game service.
+     * Creates a controller with the required game service and state mapper.
      *
      * @param gameService the service managing game sessions
+     * @param gameStateMapper the mapper converting game states to response DTOs
      */
-    public GameController(GameService gameService) {
+    public GameController(GameService gameService, GameStateMapper gameStateMapper) {
         this.gameService = gameService;
+        this.gameStateMapper = gameStateMapper;
     }
 
     /**
@@ -56,12 +61,12 @@ public class GameController {
      * @throws IllegalArgumentException if the session is invalid
      */
     @PostMapping("/{sessionId}/clean")
-    public ResponseEntity<GameState> clean(@PathVariable UUID sessionId) {
+    public ResponseEntity<GameStateResponse> clean(@PathVariable UUID sessionId) {
         gameService.clean(sessionId);
 
         GameState gameState = gameService.getGameState(sessionId);
 
-        return ResponseEntity.ok(gameState);
+        return ResponseEntity.ok(gameStateMapper.toResponse(gameState));
     }
 
     /**
@@ -76,16 +81,18 @@ public class GameController {
      * @throws IllegalArgumentException if the session is invalid
      */
     @PostMapping("/{sessionId}/brush/upgrade")
-    public ResponseEntity<GameState> buyBrushUpgrade(@PathVariable UUID sessionId) {
+    public ResponseEntity<GameStateResponse> buyBrushUpgrade(
+            @PathVariable UUID sessionId) {
 
         boolean result = gameService.buyBrushUpgrade(sessionId);
         GameState gameState = gameService.getGameState(sessionId);
+        GameStateResponse response = gameStateMapper.toResponse(gameState);
 
         if (result) {
-            return ResponseEntity.ok(gameState);
+            return ResponseEntity.ok(response);
         }
 
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(gameState);
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
     }
 
     /**
@@ -98,10 +105,10 @@ public class GameController {
      * @throws IllegalArgumentException if the session is invalid
      */
     @GetMapping("/{sessionId}")
-    public ResponseEntity<GameState> getGameState(@PathVariable UUID sessionId) {
+    public ResponseEntity<GameStateResponse> getGameState(@PathVariable UUID sessionId) {
 
         GameState gameState = gameService.getGameState(sessionId);
 
-        return ResponseEntity.ok(gameState);
+        return ResponseEntity.ok(gameStateMapper.toResponse(gameState));
     }
 }
