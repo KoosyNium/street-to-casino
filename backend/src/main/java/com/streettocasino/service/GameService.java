@@ -1,6 +1,7 @@
 package com.streettocasino.service;
 
 import com.streettocasino.dto.GameState;
+import com.streettocasino.exception.GameSessionNotFoundException;
 import com.streettocasino.model.*;
 import org.springframework.stereotype.Service;
 
@@ -117,7 +118,7 @@ public class GameService {
         }
         GameContext context = gameSessionMap.get(sessionId);
         if (context == null) {
-            throw new IllegalArgumentException("Session ID is not found");
+            throw new GameSessionNotFoundException("Game session not found");
         }
         return context;
     }
